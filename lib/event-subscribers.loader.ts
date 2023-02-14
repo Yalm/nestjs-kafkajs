@@ -31,8 +31,8 @@ export class EventSubscribersLoader
     @Inject(KAFKA_PRODUCER) private readonly producer: Producer,
   ) {
     this.consumer = this.kafka.consumer({
-      groupId: this.kafkaModuleOptions.consumer?.groupId || KAFKA_DEFAULT_GROUP,
       ...(this.kafkaModuleOptions.consumer || {}),
+      groupId: this.kafkaModuleOptions.consumer?.groupId || KAFKA_DEFAULT_GROUP,
     });
   }
 
@@ -66,7 +66,7 @@ export class EventSubscribersLoader
       }
     }
 
-    return handler(message, payload);
+    return handler(message, payload, this.consumer);
   }
 
   async loadEventListeners() {

@@ -7,6 +7,8 @@ import { KAFKA_PRODUCER } from './constants';
 export class KafkaConnection {
   constructor(@Inject(KAFKA_PRODUCER) private readonly producer: Producer) {}
 
+  transaction = this.producer.transaction;
+
   public publish(
     topic: string,
     message: any,
