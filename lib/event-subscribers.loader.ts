@@ -19,20 +19,20 @@ import {
 export class EventSubscribersLoader
   implements OnModuleInit, OnApplicationShutdown
 {
-  private consumer: Consumer;
+  private readonly consumer: Consumer;
   private readonly messageHandlers = new Map<string, any>();
 
   constructor(
     private readonly discoveryService: DiscoveryService,
     private readonly metadataScanner: MetadataScanner,
     @Inject(KAFKA_MODULE_OPTIONS)
-    private kafkaModuleOptions: KafkaModuleOptions,
+    private readonly kafkaModuleOptions: KafkaModuleOptions,
     private readonly kafka: Kafka,
     @Inject(KAFKA_PRODUCER) private readonly producer: Producer,
   ) {
     this.consumer = this.kafka.consumer({
-      ...(this.kafkaModuleOptions.consumer || {}),
-      groupId: this.kafkaModuleOptions.consumer?.groupId || KAFKA_DEFAULT_GROUP,
+      ...(this.kafkaModuleOptions.consumer ?? {}),
+      groupId: this.kafkaModuleOptions.consumer?.groupId ?? KAFKA_DEFAULT_GROUP,
     });
   }
 

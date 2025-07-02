@@ -27,11 +27,11 @@ export class KafkajsModule {
           provide: Kafka,
           useFactory: (kafkaModuleOptions: KafkaModuleOptions) => {
             return new Kafka(
-              Object.assign(kafkaModuleOptions.client || {}, {
+              Object.assign(kafkaModuleOptions.client ?? {}, {
                 clientId:
-                  kafkaModuleOptions.client.clientId || KAFKA_DEFAULT_CLIENT,
+                  kafkaModuleOptions.client.clientId ?? KAFKA_DEFAULT_CLIENT,
                 brokers:
-                  kafkaModuleOptions.client.brokers || KAFKA_DEFAULT_BROKER,
+                  kafkaModuleOptions.client.brokers ?? KAFKA_DEFAULT_BROKER,
               }),
             );
           },
@@ -84,7 +84,7 @@ export class KafkajsModule {
         const clientOptions = await options.useFactory(...args);
         return clientOptions;
       },
-      inject: [options.useExisting || options.useClass],
+      inject: [options.useExisting ?? options.useClass],
     };
   }
 }

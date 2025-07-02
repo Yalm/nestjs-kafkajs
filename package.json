@@ -3,6 +3,7 @@
   "version": "0.0.2",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "description": "A NestJS module for integrating with Kafka using kafkajs",
   "files": [
     "dist"
   ],
@@ -10,22 +11,33 @@
     "build": "tsc",
     "format": "prettier --write **/*.ts"
   },
+  "keywords": [
+    "NestJS",
+    "kafka",
+    "microservices",
+    "messaging",
+    "kafkajs"
+  ],
   "author": "Yalm",
   "license": "MIT",
   "url": "https://github.com/yalm/nestjs-kafkajs#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yalm/nestjs-kafkajs"
+  },
   "devDependencies": {
-    "@nestjs/common": "^9.0.0",
-    "@nestjs/core": "^9.0.0",
+    "@nestjs/common": "11.1.3",
+    "@nestjs/core": "11.1.3",
     "@types/node": "18.11.18",
     "kafkajs": "^2.2.3",
     "prettier": "^2.3.2",
-    "reflect-metadata": "0.1.13",
+    "reflect-metadata": "0.2.2",
     "rxjs": "^7.2.0",
-    "typescript": "^4.7.4"
+    "typescript": "5.8.3"
   },
   "peerDependencies": {
-    "@nestjs/common": "^9.0.0",
-    "@nestjs/core": "^9.0.0",
+    "@nestjs/common": "^10.0.0 || ^11.0.0",
+    "@nestjs/core": "^10.0.0 || ^11.0.0",
     "kafkajs": "*"
   }
 }

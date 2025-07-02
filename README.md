@@ -15,23 +15,6 @@ This package provides an easy way to publish and subscribe to events on Apache K
 - Automatic loading of event subscribers via a dynamic loader.
 - Access to event metadata for extending functionality.
 
-## Folder Structure
-
-```text
-├── lib/
-│   ├── constants.ts                  # Global constants
-│   ├── kafka-connection.ts           # Kafka initialization and configuration
-│   ├── kafkajs.module.ts             # NestJS main module
-│   ├── index.ts                      # Entry point (re-exports)
-│   ├── event-subscribers.loader.ts   # Automatic event subscribers loader
-│   ├── events-metadata.accessor.ts   # Event metadata management
-│   ├── decorators/
-│   └── interfaces/
-├── package.json
-├── tsconfig.json
-└── README.md
-```
-
 ## Prerequisites
 
 - Node.js >= 14
@@ -42,12 +25,6 @@ This package provides an easy way to publish and subscribe to events on Apache K
 
 ```powershell
 npm install --save nestjs-kafkajs kafkajs
-```
-
-Add development dependencies if using TypeScript:
-
-```powershell
-npm install --save-dev @types/node
 ```
 
 ## Configuration
@@ -61,11 +38,17 @@ import { KafkajsModule } from 'nestjs-kafkajs';
 
 @Module({
   imports: [
-    KafkajsModule.register({
-      clientId: 'my-app',
-      brokers: ['localhost:9092'],
-      ssl: false,
-      sasl: null,
+    KafkajsModule.forRootAsync({
+      useFactory: (configService: ConfigService) => ({
+        client: {
+          clientId: configService.get('kafka.clientId'),
+          brokers: configService.get('kafka.brokers'),
+        },
+        consumer: {
+          groupId: configService.get('kafka.groupId'),
+        },
+      }),
+      inject: [ConfigService],
     }),
   ],
 })
@@ -92,7 +75,9 @@ export class PublisherService {
   async publish() {
     await this.producer.send({
       topic: 'my-topic',
-      messages: [{ key: 'order', value: JSON.stringify({ id: 1, total: 100 }) }],
+      messages: [
+        { key: 'order', value: JSON.stringify({ id: 1, total: 100 }) },
+      ],
     });
   }
 }
@@ -114,7 +99,9 @@ export class OrderSubscriber {
   @SubscribeTo('my-topic')
   handleOrderEvent(message: { key: Buffer; value: Buffer }) {
     const payload = JSON.parse(message.value.toString());
-    this.logger.log(`Processing order ${payload.id} with total ${payload.total}`);
+    this.logger.log(
+      `Processing order ${payload.id} with total ${payload.total}`,
+    );
     // ... additional logic ...
   }
 }
